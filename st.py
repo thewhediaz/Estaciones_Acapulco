@@ -127,11 +127,23 @@ opciones_tiempo = {
 seleccion = st.selectbox("Selecciona el intervalo de tiempo a graficar", list(opciones_tiempo.keys()))
 horas = opciones_tiempo[seleccion]
 
-hora_actual = pd.Timestamp.now()
+import pytz  # agregar al inicio de tu código
+
+# Definir la zona horaria de Acapulco
+zona_acapulco = pytz.timezone("America/Mexico_City")  # UTC-6 / hora local
+
+# Obtener la hora actual en zona local
+hora_actual = pd.Timestamp.now(tz=zona_acapulco)
+
+# Calcular la hora límite según la selección
 hora_limite = hora_actual - pd.Timedelta(hours=horas)
-# Probar sin filtrar por horas para verificar que hay datos
-df_filtrado = df_todas.copy()
-st.write(df_filtrado.head(10))  # imprime las primeras 10 filas para verificar
+
+# Convertir la columna "Fecha Local" a la misma zona horaria
+df_todas["Fecha Local"] = pd.to_datetime(df_todas["Fecha Local"])
+df_todas["Fecha Local"] = df_todas["Fecha Local"].dt.tz_localize(zona_acapulco, ambiguous='NaT', nonexistent='shift_forward')
+
+# Filtrar los datos correctamente
+df_filtrado = df_todas[df_todas["Fecha Local"] >= hora_limite]
 
 
 
@@ -188,5 +200,6 @@ fig.update_yaxes(autorange=True)
 # Mostrar en Streamlit con config que NO sea responsive y SIN use_container_width
 config = {"responsive": False, "displayModeBar": True}
 st.plotly_chart(fig, use_container_width=False, config=config)
+
 
 
