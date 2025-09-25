@@ -172,9 +172,11 @@ fig.update_layout(
     title={
         'text': f"""
         <b>Temperatura de las estaciones ({seleccion})</b><br>
-        <span style="font-size:14px; color:gray;">Última actualización: {ultima_hora}</span>
+        <span style="font-size:14px; color:gray;">
+            Última actualización: {(pd.Timestamp.now() - pd.Timedelta(hours=6)).strftime("%Y-%m-%d %H:%M:%S")}
+        </span>
         """,
-        'x':0.5,           # centrar horizontalmente
+        'x': 0.5,
         'xanchor': 'center',
         'yanchor': 'top'
     }
@@ -198,6 +200,7 @@ fig.update_yaxes(autorange=True)
 # Mostrar en Streamlit con config que NO sea responsive y SIN use_container_width
 config = {"responsive": False, "displayModeBar": True}
 st.plotly_chart(fig, use_container_width=False, config=config)
+
 
 
 
