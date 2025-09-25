@@ -127,8 +127,11 @@ opciones_tiempo = {
 seleccion = st.selectbox("Selecciona el intervalo de tiempo a graficar", list(opciones_tiempo.keys()))
 horas = opciones_tiempo[seleccion]
 
-hora_actual = pd.Timestamp.now()
+# Ajuste a hora local de Acapulco (UTC-6)
+hora_actual = pd.Timestamp.utcnow() - pd.Timedelta(hours=6)
 hora_limite = hora_actual - pd.Timedelta(hours=horas)
+
+# Filtrar datos de la última N horas
 df_filtrado = df_todas[df_todas["Fecha Local"] >= hora_limite]
 
 
@@ -186,4 +189,5 @@ fig.update_yaxes(autorange=True)
 # Mostrar en Streamlit con config que NO sea responsive y SIN use_container_width
 config = {"responsive": False, "displayModeBar": True}
 st.plotly_chart(fig, use_container_width=False, config=config)
+
 
