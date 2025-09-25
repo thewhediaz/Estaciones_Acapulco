@@ -84,15 +84,6 @@ with col2:
     )
 
 
-# Título principal de la página
-st.markdown(
-    """
-    <h1 style='text-align: center; margin-top: 10px; font-size: 20px; line-height: 1.2;'>
-        SIATM Acapulco - Monitoreo de Estaciones Meteorológicas
-    </h1>
-    """,
-    unsafe_allow_html=True
-)
 
 
 # Hora de la última actualización
@@ -211,6 +202,7 @@ fig.update_yaxes(autorange=True)
 # Mostrar en Streamlit con config que NO sea responsive y SIN use_container_width
 config = {"responsive": False, "displayModeBar": True}
 st.plotly_chart(fig, use_container_width=False, config=config)
+
 
 
 
