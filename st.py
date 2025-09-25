@@ -129,7 +129,9 @@ horas = opciones_tiempo[seleccion]
 
 hora_actual = pd.Timestamp.now()
 hora_limite = hora_actual - pd.Timedelta(hours=horas)
-df_filtrado = df_todas[df_todas["Fecha Local"] >= hora_limite]
+# Probar sin filtrar por horas para verificar que hay datos
+df_filtrado = df_todas.copy()
+st.write(df_filtrado.head(10))  # imprime las primeras 10 filas para verificar
 
 
 
@@ -187,10 +189,4 @@ fig.update_yaxes(autorange=True)
 config = {"responsive": False, "displayModeBar": True}
 st.plotly_chart(fig, use_container_width=False, config=config)
 
-
-# Mostrar número de filas cargadas
-st.write("Número de filas cargadas:", len(df_filtrado))
-
-# Mostrar primeras filas para inspección rápida
-st.dataframe(df_filtrado.head(10))
 
