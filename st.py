@@ -173,10 +173,8 @@ ultima_hora = pd.Timestamp.now().strftime("%Y-%m-%d %H:%M:%S")
 fig.update_layout(
     title={
         'text': f"""
-        <b>Temperatura de las estaciones ({seleccion})</b><br>
-        <span style="font-size:14px; color:gray;">
-            Última actualización: {(pd.Timestamp.now() - pd.Timedelta(hours=6)).strftime("%Y-%m-%d %H:%M:%S")}
-        </span>
+        <b>Monitoreo de Temperatura - Estaciones SIATM Acapulco</b><br>
+        <span style="font-size:14px; color:gray;">Intervalo: {seleccion} | Última actualización: {ultima_hora}</span>
         """,
         'x': 0.5,
         'xanchor': 'center',
@@ -196,12 +194,18 @@ fig.update_layout(
 
 # Mantener autorange de ejes (si quieres que min/max se recalculen al ocultar/mostrar series)
 fig.update_xaxes(autorange=True)
-fig.update_yaxes(autorange=True)
+fig.update_yaxes(
+    autorange=True,
+    dtick=1,
+    gridcolor="rgba(229,236,246,0.15)",  # mismo color, 50% opacidad
+    gridwidth=1
+)
 
 
 # Mostrar en Streamlit con config que NO sea responsive y SIN use_container_width
 config = {"responsive": False, "displayModeBar": True}
 st.plotly_chart(fig, use_container_width=False, config=config)
+
 
 
 
