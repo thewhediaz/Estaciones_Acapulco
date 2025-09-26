@@ -157,7 +157,7 @@ fig = px.line(
     y="Temperatura (°C)",
     color_discrete_map={
     "Pie de la Cuesta": "#FF1744",
-        "Coloso": "#0D47A1",
+        "Coloso": "#04F8FF",
         "Xaltianguis": "#28A745"
     },
     color="Estación (mostrar/ocultar)",
@@ -202,6 +202,7 @@ fig.update_yaxes(autorange=True)
 # Mostrar en Streamlit con config que NO sea responsive y SIN use_container_width
 config = {"responsive": False, "displayModeBar": True}
 st.plotly_chart(fig, use_container_width=False, config=config)
+
 
 
 
