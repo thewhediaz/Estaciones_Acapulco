@@ -3,7 +3,7 @@ import pandas as pd
 import plotly.express as px
 from streamlit_autorefresh import st_autorefresh
 import datetime
-
+import pytz
 
 #########################
 # importante para poder ocultar el header 
@@ -223,6 +223,7 @@ with col_central:
     config = {"responsive": False, "displayModeBar": True}
     st.plotly_chart(fig, use_container_width=False, config=config)
 # --- FIN: Nuevo bloque para centrar la gráfica ---
+
 
 
 
