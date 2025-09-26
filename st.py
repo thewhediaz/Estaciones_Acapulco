@@ -5,8 +5,8 @@ from streamlit_autorefresh import st_autorefresh
 import datetime
 import pytz
 
-#########################
-# importante para poder ocultar el header 
+###############################################################################
+# ocultar header y footer de streamlit
 st.markdown(
     """
     <style>
@@ -24,23 +24,14 @@ st.markdown(
 )
 
 # ---------------------------------------------------------------------------
-# ---------------------------------------------------------------------------
 # AUTOREFRESH: 3 minutos después de cada múltiplo de 5
 ahora = datetime.datetime.now()
-
-# Buscar el múltiplo de 5 más cercano hacia atrás
 multiplo5 = (ahora.minute // 5) * 5
 objetivo = ahora.replace(minute=multiplo5, second=0, microsecond=0) + datetime.timedelta(minutes=3)
-
-# Si ya pasó el objetivo, saltamos al siguiente múltiplo de 5 + 3
 if ahora >= objetivo:
     objetivo = objetivo + datetime.timedelta(minutes=5)
-
-# Segundos hasta el próximo refresh
 delta = objetivo - ahora
 milisegundos_hasta_refresh = int(delta.total_seconds() * 1000)
-
-# Ejecutar autorefresh
 count = st_autorefresh(interval=milisegundos_hasta_refresh, key="datarefresh")
 
 # Configuración de la página
@@ -63,15 +54,10 @@ st.markdown(
 )
 
 ###############################################################################
-# Crear dos columnas
-col1, col2 = st.columns([1, 1])  # proporciones iguales, ajustables
-
+# Crear cabecera con logos
+col1, col2 = st.columns([1, 1])
 with col1:
-    st.image(
-        "https://acapulco.gob.mx/proteccioncivil/wp-content/uploads/2025/07/CGPCYB_24.png",
-        width=300
-    )
-
+    st.image("https://acapulco.gob.mx/proteccioncivil/wp-content/uploads/2025/07/CGPCYB_24.png", width=300)
 with col2:
     st.markdown(
         """
@@ -82,17 +68,6 @@ with col2:
         unsafe_allow_html=True
     )
 
-
-# Hora de la última actualización
-#st.markdown(
-#    """
-#    <h2 style='text-align: center; margin-top: 10px; font-size: 20px; line-height: 1.3;'>
-#        Monitoreo en tiempo real de estaciones meteorológicas - SIATM Acapulco
-#    </h2>
-#    """,
-#    unsafe_allow_html=True
-#)
-
 ###############################################################################
 # CARGAMOS LOS DATOS DE GOOGLE
 urls_estaciones = {
@@ -101,7 +76,6 @@ urls_estaciones = {
     "Xaltianguis": "https://docs.google.com/spreadsheets/d/1aL5PkK8J-1wI9RZk0nOFT9Cd35jZXPB96FVieh8QeOw/export?format=csv&gid=1707675775"
 }
 
-# Sin caché: cada vez que se llama, se leen los datos directamente
 def obtener_datos(url):
     df = pd.read_csv(url)
     df["Fecha Local"] = pd.to_datetime(df["Fecha Local"])
@@ -116,10 +90,8 @@ for est, url in urls_estaciones.items():
 df_todas = pd.concat(dfs)
 
 ###############################################################################
-
-# Crear dos columnas: una para tu selectbox y otra para un futuro selector
+# Crear selectores
 col1, col2 = st.columns([1, 1])  
-
 with col1:
     opciones_tiempo = {
         "Últimas 6 horas": 6,
@@ -131,118 +103,82 @@ with col1:
     horas = opciones_tiempo[seleccion]
 
 with col2:
-    opciones_variable = {"Temperatura":"Temperatura (°C)"}
+    opciones_variable = {
+        "Temperatura": {"col":"Temperatura (°C)", "unidad":"°C"},
+        "Rachas de viento": {"col":"Ráfaga máxima (km/h)", "unidad":"km/h"}
+    }
     seleccion2 = st.selectbox("Selecciona la variable a graficar", list(opciones_variable.keys()))
-    variable = opciones_variable[seleccion2]
+    variable_col = opciones_variable[seleccion2]["col"]
+    variable_unidad = opciones_variable[seleccion2]["unidad"]
 
+# Variable para configurar grid del eje Y según la variable
+if seleccion2 == "Temperatura":
+    dtick_y = 1
+else:
+    dtick_y = None  # deja automático para viento
 
-###########################################################################################################3
-# Definir zona horaria de Acapulco (UTC-6)
+###########################################################################################################################
+# Zona horaria y filtrado
 zona = pytz.timezone('America/Mexico_City')
-
-# Hora actual en Acapulco
 hora_actual = pd.Timestamp.now(tz=zona)
-
-# Asegurarse de que 'Fecha Local' tenga la misma zona horaria
 df_todas["Fecha Local"] = pd.to_datetime(df_todas["Fecha Local"]).dt.tz_localize(zona, ambiguous='NaT', nonexistent='NaT')
-
-# Calcular hora límite según selección
 hora_limite = hora_actual - pd.Timedelta(hours=horas)
-
-# Filtrar datos
 df_filtrado = df_todas[df_todas["Fecha Local"] >= hora_limite]
 
-
 ###############################################################################
-# Graficar Temperatura vs Fecha Local con Plotly (líneas + puntos)
-# --- crear la figura como antes
+# CREAR FIGURA
 fig = px.line(
     df_filtrado,
     x="Fecha Local",
-    y="Temperatura (°C)",
+    y=variable_col,
     color_discrete_map={
-    "Pie de la Cuesta": "#FF1744",
+        "Pie de la Cuesta": "#FF1744",
         "Coloso": "#0D47A1",
         "Xaltianguis": "#28A745"
     },
     color="Estación (mostrar/ocultar)",
-    labels={"Temperatura (°C)": "Temperatura (°C)", "Fecha Local": "Fecha Local"},
+    labels={variable_col: f"{variable_col}", "Fecha Local": "Fecha Local"},
     markers=True
 )
-fig.update_traces(marker=dict(size=5))  # Cambia 8 por el tamaño que quieras
+fig.update_traces(marker=dict(size=5))
 
-
-
-# Definir zona horaria de Acapulco (UTC-6)
-zona = pytz.timezone('America/Mexico_City')
-
-# Hora actual en Acapulco
-hora_actual = datetime.datetime.now(tz=zona)
-
-# Formatear para mostrar
 ultima_hora = hora_actual.strftime("%Y-%m-%d %H:%M:%S")
 
+# Actualizar layout: título, ejes, leyenda (sin tocar colores)
 fig.update_layout(
     title={
         'text': f"""
-        <b>Monitoreo de Temperatura - Estaciones SIATM Acapulco</b><br>
+        <b>Monitoreo de {seleccion2} - Estaciones SIATM Acapulco</b><br>
         <span style="font-size:14px; color:gray;">Intervalo: {seleccion} | Última actualización: {ultima_hora}</span>
         """,
-        'x':0.5,           # centrar horizontalmente
+        'x':0.5,
         'xanchor': 'center',
         'yanchor': 'top'
-    }
-)
-
-
-# --- FIJAR tamaño y evitar auto-resize
-fig.update_layout(
+    },
     width=1400,
     height=700,
     autosize=False,
     margin=dict(l=70, r=200, t=80, b=70),
     transition={'duration': 500, 'easing': 'linear'},
     legend=dict(
-        orientation="v",   # vertical
-        x=1.05,            # a la derecha
-        y=1,               # arriba
+        orientation="v",
+        x=1.05,
+        y=1,
         xanchor="left",
         yanchor="top",
-        title=dict(
-            text="Estación (mostrar/ocultar)"
-        ),
-        title_side="top"   # hace que el título sea horizontal
+        title=dict(text="Estación (mostrar/ocultar)")
     )
 )
-# Mantener autorange de ejes (si quieres que min/max se recalculen al ocultar/mostrar series)
-fig.update_xaxes(autorange=True)
-fig.update_yaxes(
-    autorange=True,
-    dtick=1,
-    gridcolor="rgba(229,236,246,0.15)",  # mismo color, 50% opacidad
-    gridwidth=1
-)
 
+# Configurar ejes
+fig.update_xaxes(title="Fecha Local")
+fig.update_yaxes(title=f"{variable_col}", dtick=dtick_y, gridcolor="rgba(229,236,246,0.15)", gridwidth=1)
 
-# leyenda hasta abajo
-
-# Mostrar en Streamlit con config que NO sea responsive y SIN use_container_width
-config = {"responsive": False, "displayModeBar": True}
-# ... (Código anterior hasta fig.update_layout y fig.update_xaxes/yaxes) ...
-
-# --- INICIO: Nuevo bloque para centrar la gráfica ---
-# Ajusta las proporciones: por ejemplo, 1 parte para margen izquierdo, 6 para la gráfica, 1 para margen derecho.
-# El '6' debe ser lo suficientemente grande para contener la gráfica de 1200px.
-# Puedes ajustar [1, 6, 1] a [1, 4, 1] si el ancho de tu pantalla es menor y necesitas más espacio lateral.
+###############################################################################
+# Centrar gráfica en la página
 col_vacia_izq, col_central, col_vacia_der = st.columns([1, 10, 1])
-
 with col_central:
-    # Mostrar en Streamlit con config que NO sea responsive y SIN use_container_width
-    config = {"responsive": False, "displayModeBar": True}
-    st.plotly_chart(fig, use_container_width=False, config=config)
-# --- FIN: Nuevo bloque para centrar la gráfica ---
-
-
+    st.plotly_chart(fig, use_container_width=False, config={"responsive": False, "displayModeBar": True})
 
 
 
