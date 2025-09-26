@@ -3,7 +3,6 @@ import pandas as pd
 import plotly.express as px
 from streamlit_autorefresh import st_autorefresh
 import datetime
-import pytz
 
 
 #########################
@@ -84,8 +83,6 @@ with col2:
     )
 
 
-
-
 # Hora de la última actualización
 #st.markdown(
 #    """
@@ -130,20 +127,8 @@ opciones_tiempo = {
 seleccion = st.selectbox("Selecciona el intervalo de tiempo a graficar", list(opciones_tiempo.keys()))
 horas = opciones_tiempo[seleccion]
 
-# Definir la zona horaria de Acapulco
-zona_acapulco = pytz.timezone("America/Mexico_City")  # UTC-6 / hora local
-
-# Obtener la hora actual en zona local
-hora_actual = pd.Timestamp.now(tz=zona_acapulco)
-
-# Calcular la hora límite según la selección
+hora_actual = pd.Timestamp.now()
 hora_limite = hora_actual - pd.Timedelta(hours=horas)
-
-# Convertir la columna "Fecha Local" a la misma zona horaria solo si no tiene tz
-if df_todas["Fecha Local"].dt.tz is None:
-    df_todas["Fecha Local"] = df_todas["Fecha Local"].dt.tz_localize(zona_acapulco)
-
-# Filtrar los datos correctamente
 df_filtrado = df_todas[df_todas["Fecha Local"] >= hora_limite]
 
 
@@ -157,7 +142,7 @@ fig = px.line(
     y="Temperatura (°C)",
     color_discrete_map={
     "Pie de la Cuesta": "#FF1744",
-        "Coloso": "#04F8FF",
+        "Coloso": "#0D47A1",
         "Xaltianguis": "#28A745"
     },
     color="Estación (mostrar/ocultar)",
@@ -176,7 +161,7 @@ fig.update_layout(
         <b>Monitoreo de Temperatura - Estaciones SIATM Acapulco</b><br>
         <span style="font-size:14px; color:gray;">Intervalo: {seleccion} | Última actualización: {ultima_hora}</span>
         """,
-        'x': 0.5,
+        'x':0.5,           # centrar horizontalmente
         'xanchor': 'center',
         'yanchor': 'top'
     }
@@ -186,10 +171,20 @@ fig.update_layout(
 # --- FIJAR tamaño y evitar auto-resize
 fig.update_layout(
     width=1200,                # ancho fijo en px
-    height=600,                # alto fijo en px
+    height=700,                # alto fijo en px
     autosize=False,            # IMPORTANT: desactivar autosize
     margin=dict(l=70, r=40, t=80, b=70),  # márgenes fijos para evitar reflow al cambiar leyenda
-    transition={'duration': 500, 'easing': 'linear'}
+    transition={'duration': 500, 'easing': 'linear'},
+    legend=dict(
+        orientation="h",
+        y=-0.15,
+        x=0.5,
+        xanchor="center",
+        title=dict(
+            text="                                         Estación (mostrar/ocultar)",   # texto de título
+            side="top"                          # se coloca arriba
+        )
+    )
 )
 
 # Mantener autorange de ejes (si quieres que min/max se recalculen al ocultar/mostrar series)
@@ -202,9 +197,23 @@ fig.update_yaxes(
 )
 
 
+# leyenda hasta abajo
+
 # Mostrar en Streamlit con config que NO sea responsive y SIN use_container_width
 config = {"responsive": False, "displayModeBar": True}
-st.plotly_chart(fig, use_container_width=False, config=config)
+# ... (Código anterior hasta fig.update_layout y fig.update_xaxes/yaxes) ...
+
+# --- INICIO: Nuevo bloque para centrar la gráfica ---
+# Ajusta las proporciones: por ejemplo, 1 parte para margen izquierdo, 6 para la gráfica, 1 para margen derecho.
+# El '6' debe ser lo suficientemente grande para contener la gráfica de 1200px.
+# Puedes ajustar [1, 6, 1] a [1, 4, 1] si el ancho de tu pantalla es menor y necesitas más espacio lateral.
+col_vacia_izq, col_central, col_vacia_der = st.columns([1, 10, 1])
+
+with col_central:
+    # Mostrar en Streamlit con config que NO sea responsive y SIN use_container_width
+    config = {"responsive": False, "displayModeBar": True}
+    st.plotly_chart(fig, use_container_width=False, config=config)
+# --- FIN: Nuevo bloque para centrar la gráfica ---
 
 
 
