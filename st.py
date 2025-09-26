@@ -126,11 +126,20 @@ opciones_tiempo = {
 
 seleccion = st.selectbox("Selecciona el intervalo de tiempo a graficar", list(opciones_tiempo.keys()))
 horas = opciones_tiempo[seleccion]
+# Definir zona horaria de Acapulco (UTC-6)
+zona = pytz.timezone('America/Mexico_City')
 
-hora_actual = pd.Timestamp.now()
+# Hora actual en Acapulco
+hora_actual = pd.Timestamp.now(tz=zona)
+
+# Asegurarse de que 'Fecha Local' tenga la misma zona horaria
+df_todas["Fecha Local"] = pd.to_datetime(df_todas["Fecha Local"]).dt.tz_localize(zona, ambiguous='NaT', nonexistent='NaT')
+
+# Calcular hora límite según selección
 hora_limite = hora_actual - pd.Timedelta(hours=horas)
-df_filtrado = df_todas[df_todas["Fecha Local"] >= hora_limite]
 
+# Filtrar datos
+df_filtrado = df_todas[df_todas["Fecha Local"] >= hora_limite]
 
 
 ###############################################################################
@@ -214,6 +223,7 @@ with col_central:
     config = {"responsive": False, "displayModeBar": True}
     st.plotly_chart(fig, use_container_width=False, config=config)
 # --- FIN: Nuevo bloque para centrar la gráfica ---
+
 
 
 
