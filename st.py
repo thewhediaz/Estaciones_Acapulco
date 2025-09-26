@@ -179,23 +179,23 @@ fig.update_layout(
 
 # --- FIJAR tamaño y evitar auto-resize
 fig.update_layout(
-    width=1200,                # ancho fijo en px
-    height=700,                # alto fijo en px
-    autosize=False,            # IMPORTANT: desactivar autosize
-    margin=dict(l=70, r=40, t=80, b=70),  # márgenes fijos para evitar reflow al cambiar leyenda
+    width=1400,
+    height=700,
+    autosize=False,
+    margin=dict(l=70, r=200, t=80, b=70),
     transition={'duration': 500, 'easing': 'linear'},
     legend=dict(
-        orientation="h",
-        y=-0.15,
-        x=0.5,
-        xanchor="center",
+        orientation="v",   # vertical
+        x=1.05,            # a la derecha
+        y=1,               # arriba
+        xanchor="left",
+        yanchor="top",
         title=dict(
-            text="                                         Estación (mostrar/ocultar)",   # texto de título
-            side="top"                          # se coloca arriba
-        )
+            text="Estación (mostrar/ocultar)"
+        ),
+        title_side="top"   # hace que el título sea horizontal
     )
 )
-
 # Mantener autorange de ejes (si quieres que min/max se recalculen al ocultar/mostrar series)
 fig.update_xaxes(autorange=True)
 fig.update_yaxes(
@@ -223,6 +223,7 @@ with col_central:
     config = {"responsive": False, "displayModeBar": True}
     st.plotly_chart(fig, use_container_width=False, config=config)
 # --- FIN: Nuevo bloque para centrar la gráfica ---
+
 
 
 
