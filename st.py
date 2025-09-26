@@ -105,7 +105,7 @@ with col1:
 with col2:
     opciones_variable = {
         "Temperatura": {"col":"Temperatura (°C)", "unidad":"°C"},
-        "Rachas de viento": {"col":"Ráfaga máxima (km/h)", "unidad":"km/h"}
+        "Racha máxima de viento en ultimos 10 minutos": {"col":"Ráfaga máxima (km/h)", "unidad":"km/h"}
     }
     seleccion2 = st.selectbox("Selecciona la variable a graficar", list(opciones_variable.keys()))
     variable_col = opciones_variable[seleccion2]["col"]
@@ -138,9 +138,9 @@ fig = px.line(
     },
     color="Estación (mostrar/ocultar)",
     labels={variable_col: f"{variable_col}", "Fecha Local": "Fecha Local"},
-    markers=True
+    markers=False
 )
-fig.update_traces(marker=dict(size=5))
+#fig.update_traces(marker=dict(size=5))
 
 ultima_hora = hora_actual.strftime("%Y-%m-%d %H:%M:%S")
 
@@ -179,11 +179,6 @@ fig.update_yaxes(title=f"{variable_col}", dtick=dtick_y, gridcolor="rgba(229,236
 col_vacia_izq, col_central, col_vacia_der = st.columns([1, 10, 1])
 with col_central:
     st.plotly_chart(fig, use_container_width=False, config={"responsive": False, "displayModeBar": True})
-
-
-
-
-
 
 
 
