@@ -117,15 +117,26 @@ df_todas = pd.concat(dfs)
 
 ###############################################################################
 
-opciones_tiempo = {
-    "Últimas 6 horas": 6,
-    "Últimas 12 horas": 12,
-    "Últimas 24 horas": 24,
-    "Última semana": 7*24
-}
+# Crear dos columnas: una para tu selectbox y otra para un futuro selector
+col1, col2 = st.columns([1, 1])  
 
-seleccion = st.selectbox("Selecciona el intervalo de tiempo a graficar", list(opciones_tiempo.keys()))
-horas = opciones_tiempo[seleccion]
+with col1:
+    opciones_tiempo = {
+        "Últimas 6 horas": 6,
+        "Últimas 12 horas": 12,
+        "Últimas 24 horas": 24,
+        "Última semana": 7*24
+    }
+    seleccion = st.selectbox("Selecciona el intervalo de tiempo a graficar", list(opciones_tiempo.keys()))
+    horas = opciones_tiempo[seleccion]
+
+with col2:
+    opciones_variable = {"Temperatura":"Temperatura (°C)"}
+    seleccion2 = st.selectbox("Selecciona la variable a graficar", list(opciones_variable.keys()))
+    variable = opciones_variable[seleccion2]
+
+
+###########################################################################################################3
 # Definir zona horaria de Acapulco (UTC-6)
 zona = pytz.timezone('America/Mexico_City')
 
@@ -230,6 +241,7 @@ with col_central:
     config = {"responsive": False, "displayModeBar": True}
     st.plotly_chart(fig, use_container_width=False, config=config)
 # --- FIN: Nuevo bloque para centrar la gráfica ---
+
 
 
 
