@@ -162,7 +162,14 @@ fig.update_traces(marker=dict(size=5))  # Cambia 8 por el tamaño que quieras
 
 
 
-ultima_hora = pd.Timestamp.now().strftime("%Y-%m-%d %H:%M:%S")
+# Definir zona horaria de Acapulco (UTC-6)
+zona = pytz.timezone('America/Mexico_City')
+
+# Hora actual en Acapulco
+hora_actual = datetime.datetime.now(tz=zona)
+
+# Formatear para mostrar
+ultima_hora = hora_actual.strftime("%Y-%m-%d %H:%M:%S")
 
 fig.update_layout(
     title={
@@ -223,6 +230,7 @@ with col_central:
     config = {"responsive": False, "displayModeBar": True}
     st.plotly_chart(fig, use_container_width=False, config=config)
 # --- FIN: Nuevo bloque para centrar la gráfica ---
+
 
 
 
