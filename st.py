@@ -23,6 +23,22 @@ if alerta:
         """,
         unsafe_allow_html=True
     )
+else:
+    # Crear cabecera con logos
+    col1, col2 = st.columns([1, 1])
+    with col1:
+        st.image("https://acapulco.gob.mx/proteccioncivil/wp-content/uploads/2025/07/CGPCYB_24.png", width=300)
+    with col2:
+        st.markdown(
+            """
+            <div style="text-align: right;">
+                <img src="https://i.ibb.co/zTM1fBTg/SIATM.png" width="90">
+            </div>
+            """,
+            unsafe_allow_html=True
+        )
+
+    
 
 
 ###############################################################################
@@ -74,19 +90,6 @@ st.markdown(
 )
 
 ###############################################################################
-# Crear cabecera con logos
-col1, col2 = st.columns([1, 1])
-with col1:
-    st.image("https://acapulco.gob.mx/proteccioncivil/wp-content/uploads/2025/07/CGPCYB_24.png", width=300)
-with col2:
-    st.markdown(
-        """
-        <div style="text-align: right;">
-            <img src="https://i.ibb.co/zTM1fBTg/SIATM.png" width="90">
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
 
 ###############################################################################
 # CARGAMOS LOS DATOS DE GOOGLE
@@ -207,6 +210,7 @@ fig.update_yaxes(title=f"{variable_col}", dtick=dtick_y, gridcolor="rgba(229,236
 col_vacia_izq, col_central, col_vacia_der = st.columns([1, 10, 1])
 with col_central:
     st.plotly_chart(fig, use_container_width=False, config={"responsive": False, "displayModeBar": True})
+
 
 
 
