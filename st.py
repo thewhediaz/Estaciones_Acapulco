@@ -5,6 +5,26 @@ from streamlit_autorefresh import st_autorefresh
 import datetime
 import pytz
 
+
+alerta = True
+
+if alerta:
+    st.markdown(
+        """
+        <div style="width:100%;height:200px;background:red;color:white;font-size:40px;text-align:center;animation: blink 1s infinite;">
+            ¡ALERTA! Valores fuera de rango
+        </div>
+        <style>
+        @keyframes blink {
+            0%, 50%, 100% {opacity: 1;}
+            25%, 75% {opacity: 0;}
+        }
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
+
+
 ###############################################################################
 # ocultar header y footer de streamlit
 st.markdown(
@@ -187,5 +207,6 @@ fig.update_yaxes(title=f"{variable_col}", dtick=dtick_y, gridcolor="rgba(229,236
 col_vacia_izq, col_central, col_vacia_der = st.columns([1, 10, 1])
 with col_central:
     st.plotly_chart(fig, use_container_width=False, config={"responsive": False, "displayModeBar": True})
+
 
 
