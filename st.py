@@ -11,13 +11,13 @@ alerta = True
 if alerta:
     st.markdown(
         """
-        <div style="width:100%;height:150px;background:#FF0000;color:white;font-size:40px;text-align:center;animation: blink 1s infinite;">
-            ¡ALERTA!
+        <div style="width:100%;height:150px;background:red;color:white;font-size:40px;text-align:center;animation: blink 1s infinite;">
+            ¡ALERTA! 
         </div>
         <style>
         @keyframes blink {
-            0%, 50%, 100% {background-color: #FF0000;}
-            25%, 75% {background-color: #000000;}
+            0%, 50%, 100% {opacity: 1;}
+            25%, 75% {opacity: 0;}
         }
         </style>
         """,
