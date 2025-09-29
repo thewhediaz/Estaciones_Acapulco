@@ -9,6 +9,7 @@ import pytz
 alerta = True
 
 if alerta:
+    # Agregamos emojis de sirena al inicio y final del texto
     texto = "🚨 ¡ALERTA! Todos los usuarios deben prestar atención a los datos de monitoreo 🚨"
     tiempo_animacion = max(10, len(texto) * 0.5)
 
@@ -17,7 +18,7 @@ if alerta:
         <div style="width:100%;height:150px;background:red;overflow:hidden;position:relative;animation: blink 1s infinite;
                     display:flex; align-items:center;">
             <div style="display:inline-block; white-space:nowrap; animation: scrollText {tiempo_animacion}s linear infinite; font-size:40px; color:white;">
-                <span style="animation: blinkEmoji 1s infinite;">🚨</span> ¡ALERTA! Todos los usuarios deben prestar atención a los datos de monitoreo <span style="animation: blinkEmoji 1s infinite;">🚨</span>
+                {texto}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  <!-- Espacio extra para separación -->
             </div>
         </div>
 
@@ -31,15 +32,11 @@ if alerta:
             0% {{ transform: translateX(100%); }}
             100% {{ transform: translateX(-100%); }}
         }}
-
-        @keyframes blinkEmoji {{
-            0%, 50%, 100% {{opacity: 1;}}
-            25%, 75% {{opacity: 0;}}
-        }}
         </style>
         """,
         unsafe_allow_html=True
     )
+
 
 
 
@@ -230,6 +227,7 @@ fig.update_yaxes(title=f"{variable_col}", dtick=dtick_y, gridcolor="rgba(229,236
 col_vacia_izq, col_central, col_vacia_der = st.columns([1, 10, 1])
 with col_central:
     st.plotly_chart(fig, use_container_width=False, config={"responsive": False, "displayModeBar": True})
+
 
 
 
