@@ -11,18 +11,19 @@ alerta = True
 if alerta:
     st.markdown(
         """
-        <div style="width:100%;height:150px;background:red;color:white;font-size:40px;text-align:center;animation: blink 1s infinite;">
-            ¡ALERTA! 
+        <div style="width:100%;height:150px;background:#FF0000;color:white;font-size:40px;text-align:center;animation: blink 1s infinite;">
+            ¡ALERTA!
         </div>
         <style>
         @keyframes blink {
-            0%, 50%, 100% {opacity: 1;}
-            25%, 75% {opacity: 0;}
+            0%, 50%, 100% {background-color: #FF0000;}
+            25%, 75% {background-color: #000000;}
         }
         </style>
         """,
         unsafe_allow_html=True
     )
+
 else:
     # Crear cabecera con logos
     col1, col2 = st.columns([1, 1])
@@ -210,6 +211,7 @@ fig.update_yaxes(title=f"{variable_col}", dtick=dtick_y, gridcolor="rgba(229,236
 col_vacia_izq, col_central, col_vacia_der = st.columns([1, 10, 1])
 with col_central:
     st.plotly_chart(fig, use_container_width=False, config={"responsive": False, "displayModeBar": True})
+
 
 
 
