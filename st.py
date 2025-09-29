@@ -189,3 +189,12 @@ with col_central:
     st.plotly_chart(fig, use_container_width=False, config={"responsive": False, "displayModeBar": True})
 
 
+st.markdown(
+    """
+    <audio autoplay>
+      <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+    </audio>
+    """,
+    unsafe_allow_html=True
+)
+
