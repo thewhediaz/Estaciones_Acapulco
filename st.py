@@ -183,7 +183,9 @@ fig = px.line(
     color_discrete_map={
         "Pie de la Cuesta": "#FF1744",
         "Coloso": "#0D47A1",
-        "Xaltianguis": "#28A745"
+        "Xaltianguis": "#28A745",
+        "Progreso": "pink"
+
     },
     color="Estación (mostrar/ocultar)",
     labels={variable_col: f"{variable_col}", "Fecha Local": "Fecha Local"},
@@ -228,6 +230,7 @@ fig.update_yaxes(title=f"{variable_col}", dtick=dtick_y, gridcolor="rgba(229,236
 col_vacia_izq, col_central, col_vacia_der = st.columns([1, 10, 1])
 with col_central:
     st.plotly_chart(fig, use_container_width=False, config={"responsive": False, "displayModeBar": True})
+
 
 
 
