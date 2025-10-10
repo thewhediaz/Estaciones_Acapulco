@@ -113,7 +113,8 @@ st.markdown(
 urls_estaciones = {
     "Pie de la Cuesta": "https://docs.google.com/spreadsheets/d/1aL5PkK8J-1wI9RZk0nOFT9Cd35jZXPB96FVieh8QeOw/export?format=csv&gid=645419203",
     "Coloso": "https://docs.google.com/spreadsheets/d/1aL5PkK8J-1wI9RZk0nOFT9Cd35jZXPB96FVieh8QeOw/export?format=csv&gid=912283735",
-    "Xaltianguis": "https://docs.google.com/spreadsheets/d/1aL5PkK8J-1wI9RZk0nOFT9Cd35jZXPB96FVieh8QeOw/export?format=csv&gid=1707675775"
+    "Xaltianguis": "https://docs.google.com/spreadsheets/d/1aL5PkK8J-1wI9RZk0nOFT9Cd35jZXPB96FVieh8QeOw/export?format=csv&gid=1707675775",
+    "Progreso": "https://docs.google.com/spreadsheets/d/1aL5PkK8J-1wI9RZk0nOFT9Cd35jZXPB96FVieh8QeOw/export?format=csv&gid=739103023"
 }
 
 def obtener_datos(url):
@@ -227,6 +228,7 @@ fig.update_yaxes(title=f"{variable_col}", dtick=dtick_y, gridcolor="rgba(229,236
 col_vacia_izq, col_central, col_vacia_der = st.columns([1, 10, 1])
 with col_central:
     st.plotly_chart(fig, use_container_width=False, config={"responsive": False, "displayModeBar": True})
+
 
 
 
