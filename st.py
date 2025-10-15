@@ -10,7 +10,7 @@ alerta = True
 
 if alerta:
     # Agregamos emojis de sirena al inicio y final del texto
-    texto = "⚠️ALERTA⚠️ programando alertas: prueba prueba prueba prueba prueba prueba prueba prueba prueba prueba "
+    texto = "⚠️ALERTA⚠️ programando alertas: prueba prueba prueba prueba prueba "
     tiempo_animacion = max(10, len(texto) * 0.5)
 
     st.markdown(
@@ -236,6 +236,7 @@ fig.update_yaxes(title=f"{variable_col}", dtick=dtick_y, gridcolor="rgba(229,236
 col_vacia_izq, col_central, col_vacia_der = st.columns([1, 10, 1])
 with col_central:
     st.plotly_chart(fig, use_container_width=False, config={"responsive": False, "displayModeBar": True})
+
 
 
 
